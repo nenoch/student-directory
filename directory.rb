@@ -1,18 +1,3 @@
-# students into hashes
-# students = [
-#   {name: "Dr. Hannibal Lecter", cohort: :november},
-#  {name:"Darth Vader", cohort: :november},
-#  {name:"Nurse Ratched", cohort: :november},
-#  {name:"Michael Corleone", cohort: :november},
-#  {name:"Alex DeLarge", cohort: :november},
-#  {name:"The Wicked Witch of the West", cohort: :november},
-#  {name:"Terminator", cohort: :november},
-#  {name:"Freddy Krueger", cohort: :november},
-#  {name:"The Joker", cohort: :november},
-#  {name:"Joffrey Baratheon", cohort: :november},
-#  {name:"Norman Bates", cohort: :november}
-# ]
-
 # define methods
 
 def input_students
@@ -44,8 +29,30 @@ def print_footer(names)
   puts "Overall we have #{names.count} great students."
 end
 
+def interactive_menu
+  students = []
+  loop do
+    # print the menu and ask the user what to do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    #read the input and save it into a variable.
+    selection = gets.chomp
+    # do what the user ask. This is a switch statement.
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header
+      print(students)
+      print_footer(students)
+    when "9"
+      exit # terminates the programme
+    else
+      puts "I don't know what you mean, try again."
+    end
+  end
+end
+
 #print it out!
-students = input_students
-print_header
-print(students)
-print_footer(students)
+interactive_menu
