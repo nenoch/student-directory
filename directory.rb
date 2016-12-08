@@ -3,14 +3,15 @@
 def input_students
   puts "Please enter the names of the students."
   puts "To finish just hit return twice."
-  students = []
+  # @ makes the variable accessible to all methods.
+  @students = []
   name = gets.chomp
   while !name.empty? do
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students!"
+    @students << {name: name, cohort: :november}
+    puts "Now we have #{@students.count} students!"
     name = gets.chomp
   end
-  students
+  @students
 end
 
 def print_header
@@ -19,38 +20,46 @@ def print_header
 end
 
 # .each counts every instances [0]"Dr. Lecter" [1]:november
-def print(names)
-  names.each do |name|
+def print_student_list
+  @students.each do |name|
   puts "#{name[:name]} (#{name[:cohort]} cohort)"
   end
 end
 
-def print_footer(names)
-  puts "Overall we have #{names.count} great students."
+def print_footer
+  puts "Overall we have #{@students.count} great students."
+end
+
+def print_menu
+  # print the menu and ask the user what to do
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def show_students
+  print_header
+  print_student_list
+  print_footer
+end
+
+def process(selection)
+  case selection
+  when "1"
+    input_students
+  when "2"
+    show_students
+  when "9"
+    exit # terminates the programme
+  else
+    puts "I don't know what you mean, try again."
+  end
 end
 
 def interactive_menu
-  students = []
   loop do
-    # print the menu and ask the user what to do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
-    #read the input and save it into a variable.
-    selection = gets.chomp
-    # do what the user ask. This is a switch statement.
-    case selection
-    when "1"
-      students = input_students
-    when "2"
-      print_header
-      print(students)
-      print_footer(students)
-    when "9"
-      exit # terminates the programme
-    else
-      puts "I don't know what you mean, try again."
-    end
+    print_menu
+    process(gets.chomp)
   end
 end
 
