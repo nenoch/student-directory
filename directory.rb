@@ -1,34 +1,6 @@
+@students = []
+
 # define methods
-
-def input_students
-  puts "Please enter the names of the students."
-  puts "To finish just hit return twice."
-  # @ makes the variable accessible to all methods.
-  @students = []
-  name = gets.chomp
-  while !name.empty? do
-    @students << {name: name, cohort: :november}
-    puts "Now we have #{@students.count} students!"
-    name = gets.chomp
-  end
-  @students
-end
-
-def print_header
-  puts "The students of Villains Academy"
-  puts "-----------"
-end
-
-# .each counts every instances [0]"Dr. Lecter" [1]:november
-def print_student_list
-  @students.each do |name|
-  puts "#{name[:name]} (#{name[:cohort]} cohort)"
-  end
-end
-
-def print_footer
-  puts "Overall we have #{@students.count} great students."
-end
 
 def print_menu
   # print the menu and ask the user what to do
@@ -39,10 +11,11 @@ def print_menu
   puts "9. Exit"
 end
 
-def show_students
-  print_header
-  print_student_list
-  print_footer
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
 end
 
 def process(selection)
@@ -62,11 +35,37 @@ def process(selection)
   end
 end
 
-def interactive_menu
-  loop do
-    print_menu
-    process(gets.chomp)
+def input_students
+  puts "Please enter the names of the students."
+  puts "To finish just hit return twice."
+  # @ makes the variable accessible to all methods.
+  name = STDIN.gets.chomp
+  while !name.empty? do
+    @students << {name: name, cohort: :november}
+    puts "Now we have #{@students.count} students!"
+    name = STDIN.gets.chomp
   end
+end
+
+def show_students
+  print_header
+  print_student_list
+  print_footer
+end
+
+def print_header
+  puts "The students of Villains Academy"
+  puts "-----------"
+end
+# .each counts every instances [0]"Dr. Lecter" [1]:november
+def print_student_list
+  @students.each do |name|
+  puts "#{name[:name]} (#{name[:cohort]} cohort)"
+  end
+end
+
+def print_footer
+  puts "Overall we have #{@students.count} great students."
 end
 
 def save_students
@@ -82,8 +81,9 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+# giving a default file as value for filename when no other file are declared
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     # parallel assignment
     name, cohort = line.chomp.split(',')
@@ -92,5 +92,19 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+
 #print it out!
+try_load_students
 interactive_menu
